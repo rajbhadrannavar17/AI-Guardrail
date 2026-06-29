@@ -35,6 +35,13 @@
       action: ACTION.BLOCK
     },
     {
+      name: "API key disclosure",
+      category: "API key",
+      pattern: /\b(api[_\s-]?key|access[_\s-]?key|client[_\s-]?secret|secret[_\s-]?key)\s*(is|=|:)\s*['"]?[A-Za-z0-9_.\-]{4,}/gi,
+      risk: "Critical",
+      action: ACTION.BLOCK
+    },
+    {
       name: "GitHub token",
       category: "Developer token",
       pattern: /\bgh[pousr]_[A-Za-z0-9_]{20,}\b/g,
@@ -59,6 +66,13 @@
       name: "Password assignment",
       category: "Password",
       pattern: /\b(password|passwd|pwd)\s*[:=]\s*['"]?[^'"\s]{8,}/gi,
+      risk: "High",
+      action: ACTION.BLOCK
+    },
+    {
+      name: "Password disclosure",
+      category: "Password",
+      pattern: /\b(my\s+)?(password|passwd|pwd)\s+(is|=|:)\s*['"]?[^'"\s]{4,}/gi,
       risk: "High",
       action: ACTION.BLOCK
     },
