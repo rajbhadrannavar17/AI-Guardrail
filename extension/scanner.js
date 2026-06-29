@@ -37,7 +37,7 @@
     {
       name: "API key disclosure",
       category: "API key",
-      pattern: /\b(?:[a-z0-9_.-]+\s+){0,4}(api[_\s-]?key|access[_\s-]?key|client[_\s-]?secret|secret[_\s-]?key)\s*(is|=|:)\s*['"]?[A-Za-z0-9_.\-]{3,}/gi,
+      pattern: /\b(?:[a-z0-9_.-]+\s+){0,4}(api[_\s-]?key|access[_\s-]?key|client[_\s-]?secret|secret[_\s-]?key)\s*(is|as|=|:)\s*['"]?[A-Za-z0-9_.\-]{3,}/gi,
       risk: "Critical",
       action: ACTION.BLOCK
     },
@@ -72,14 +72,14 @@
     {
       name: "Password disclosure",
       category: "Password",
-      pattern: /\b(?:[a-z0-9_.-]+\s+){0,4}(password|passwd|pwd)\s+(is|=|:)\s*['"]?[^'"\s]{3,}/gi,
+      pattern: /\b(?:[a-z0-9_.-]+\s+){0,4}(password|passwd|pwd)\s+(is|as|=|:)\s*['"]?[^'"\s]{3,}/gi,
       risk: "High",
       action: ACTION.BLOCK
     },
     {
       name: "Token disclosure",
       category: "Access token",
-      pattern: /\b(?:[a-z0-9_.-]+\s+){0,4}(token|auth[_\s-]?token|bearer[_\s-]?token)\s*(is|=|:)\s*['"]?[A-Za-z0-9_.\-]{3,}/gi,
+      pattern: /\b(?:[a-z0-9_.-]+\s+){0,4}(token|auth[_\s-]?token|bearer[_\s-]?token)\s*(is|as|=|:)\s*['"]?[A-Za-z0-9_.\-]{3,}/gi,
       risk: "High",
       action: ACTION.BLOCK
     },
