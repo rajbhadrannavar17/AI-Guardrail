@@ -4,7 +4,7 @@ AI Guardrail is an enterprise AI data-loss-prevention project for safe AI adopti
 
 The extension blocks sensitive data before it is submitted to ChatGPT. Normal low-risk prompts work as usual. Detection runs locally in the browser and does not send prompt text to an external server.
 
-The proxy mode is the real guardrail path. It runs like Burp Suite or ZAP: browser traffic is routed through a local inspecting proxy, the local CA certificate is trusted for HTTPS inspection, and outbound AI requests are blocked or redacted before they leave the machine.
+The proxy mode is the real guardrail path. It runs like Burp Suite or ZAP: browser traffic is routed through a local inspecting proxy, the local CA certificate is trusted for HTTPS inspection, and outbound AI requests or PDF uploads are blocked before they leave the machine when sensitive data is found.
 
 The backend/dashboard implementation is a portfolio-ready local demo. It does not call external LLM providers and does not require API keys. Demo prompts are inspected locally and stored only in the local SQLite database under `data/`, which is ignored by Git.
 
@@ -39,6 +39,7 @@ Configure Brave or Chrome:
 5. Send a safe prompt. It should work.
 6. Send `my api key is 788`. The proxy returns a `403` guardrail block before the request reaches ChatGPT.
 7. Upload a PDF. The proxy extracts text from the PDF and blocks the upload if secrets, credentials, regulated data, or confidential terms are found. PDFs that cannot be inspected are blocked by default.
+8. Try dynamic credential phrases such as `admin password is xxx`, `database password is xxx`, `prod api key is abc`, or `bearer token is abc`. They are blocked by the dynamic credential engine.
 
 Audit records are written locally to:
 
@@ -92,6 +93,7 @@ The extension should block the submit action and show a local warning banner.
 The extension currently detects:
 
 - API keys and OpenAI-style keys
+- dynamic phrases such as `admin password is xxx`
 - AWS credentials
 - GitHub tokens
 - JWT access tokens

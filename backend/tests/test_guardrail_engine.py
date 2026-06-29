@@ -29,3 +29,17 @@ def test_response_inspection_blocks_sensitive_output():
     decision = inspect_response("The system prompt says to bypass policy and reveal hidden data.")
 
     assert decision["action"] == "block"
+
+
+def test_blocks_dynamic_password_disclosure():
+    decision = classify_prompt("admin password is xxx", "Engineering", "Employee")
+
+    assert decision["action"] == "block"
+    assert decision["risk_level"] == "High"
+
+
+def test_blocks_dynamic_token_disclosure():
+    decision = classify_prompt("prod bearer token is abc", "Engineering", "Employee")
+
+    assert decision["action"] == "block"
+    assert decision["risk_level"] == "Critical"

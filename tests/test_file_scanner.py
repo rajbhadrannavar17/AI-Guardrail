@@ -1,3 +1,4 @@
+from app import file_scanner
 from app.file_scanner import extract_upload_candidates, scan_upload_bytes
 
 
@@ -13,6 +14,16 @@ def test_uninspectable_pdf_is_blocked():
 
     assert decision["action"] == "block"
     assert "could not be inspected" in decision["decision_reason"]
+
+
+def test_pdf_with_sensitive_text_is_blocked(monkeypatch):
+    monkeypatch.setattr(file_scanner, "extract_pdf_text", lambda _: "admin password is xxx")
+
+    decision = scan_upload_bytes("secrets.pdf", "application/pdf", b"%PDF-1.7\nfake")
+
+    assert decision["action"] == "block"
+    assert decision["file_type"] == "pdf"
+    assert "PDF upload blocked" in decision["decision_reason"]
 
 
 def test_multipart_pdf_candidate_is_extracted():
