@@ -39,7 +39,7 @@ Configure Brave or Chrome:
 5. Send a safe prompt. It should work.
 6. Send `my api key is 788`. The proxy returns a `403` guardrail block before the request reaches ChatGPT.
 7. Upload a PDF. The proxy extracts text from the PDF and blocks the upload if secrets, credentials, regulated data, or confidential terms are found. PDFs that cannot be inspected are blocked by default.
-8. Try dynamic credential phrases such as `admin password is xxx`, `admin password as xxx`, `database password is xxx`, `prod api key is abc`, or `bearer token is abc`. They are blocked by the dynamic credential engine.
+8. Try dynamic credential phrases such as `admin password 7899`, `admin password is xxx`, `admin password as xxx`, `database password xxx`, `prod api key is abc`, or `bearer token abc`. They are blocked by the dynamic credential engine.
 
 Audit records are written locally to:
 
@@ -93,7 +93,7 @@ The extension should block the submit action and show a local warning banner.
 The extension currently detects:
 
 - API keys and OpenAI-style keys
-- dynamic phrases such as `admin password is xxx` and `admin password as xxx`
+- dynamic phrases such as `admin password 7899`, `admin password is xxx`, and `admin password as xxx`
 - AWS credentials
 - GitHub tokens
 - JWT access tokens

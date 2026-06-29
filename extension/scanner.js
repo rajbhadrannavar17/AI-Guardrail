@@ -77,9 +77,23 @@
       action: ACTION.BLOCK
     },
     {
+      name: "Password value after label",
+      category: "Password",
+      pattern: /\b(?:[a-z0-9_.-]+\s+){0,4}(password|passwd|pwd)\s+['"]?[A-Za-z0-9_@#$%^&*+=.!?\-]{3,}\b/gi,
+      risk: "High",
+      action: ACTION.BLOCK
+    },
+    {
       name: "Token disclosure",
       category: "Access token",
       pattern: /\b(?:[a-z0-9_.-]+\s+){0,4}(token|auth[_\s-]?token|bearer[_\s-]?token)\s*(is|as|=|:)\s*['"]?[A-Za-z0-9_.\-]{3,}/gi,
+      risk: "High",
+      action: ACTION.BLOCK
+    },
+    {
+      name: "Token value after label",
+      category: "Access token",
+      pattern: /\b(?:[a-z0-9_.-]+\s+){0,4}(token|auth[_\s-]?token|bearer[_\s-]?token)\s+['"]?[A-Za-z0-9_.\-]{3,}\b/gi,
       risk: "High",
       action: ACTION.BLOCK
     },

@@ -45,6 +45,13 @@ def test_blocks_dynamic_password_as_disclosure():
     assert decision["risk_level"] == "High"
 
 
+def test_blocks_dynamic_password_without_connector():
+    decision = classify_prompt("admin password 7899", "Engineering", "Employee")
+
+    assert decision["action"] == "block"
+    assert decision["risk_level"] == "High"
+
+
 def test_blocks_dynamic_token_disclosure():
     decision = classify_prompt("prod bearer token is abc", "Engineering", "Employee")
 
