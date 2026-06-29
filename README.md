@@ -27,7 +27,7 @@ It should submit normally.
 Try a risky prompt:
 
 ```text
-My production password is password=SuperSecret123 and my API key is sk-test12345678901234567890
+My production credential is password=[example-secret-value] and my API key is [example-api-key]
 ```
 
 The extension should block the submit action and show a local warning banner.
