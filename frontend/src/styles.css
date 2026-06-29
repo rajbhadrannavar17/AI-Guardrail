@@ -385,9 +385,29 @@ textarea:focus {
   text-transform: capitalize;
 }
 
+.fileScan,
+.fileResult {
+  display: grid;
+  gap: 10px;
+}
+
+.fileResult {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-2);
+  padding: 12px;
+}
+
+.fileResult strong {
+  font-size: 22px;
+  text-transform: capitalize;
+}
+
 .riskCard span,
 .riskCard p,
 .riskCard small,
+.fileResult span,
+.fileResult p,
 .empty {
   color: var(--muted);
   line-height: 1.5;

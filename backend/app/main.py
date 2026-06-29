@@ -5,12 +5,13 @@ import json
 from contextlib import asynccontextmanager
 from typing import Literal
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, File, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, Field
 
 from .database import get_conn, init_db, row_to_approval, row_to_prompt_log
+from .file_scanner import scan_upload_bytes
 from .guardrail_engine import (
     POLICIES,
     analytics_from_logs,
@@ -108,6 +109,12 @@ def guarded_chat(req: PromptRequest, request: Request) -> dict:
 @app.post("/api/guardrail/response-inspect")
 def response_inspection(req: ResponseInspectionRequest) -> dict:
     return inspect_response(req.response)
+
+
+@app.post("/api/guardrail/files/scan")
+async def file_inspection(file: UploadFile = File(...), department: str = "Browser", role: str = "Employee") -> dict:
+    data = await file.read()
+    return scan_upload_bytes(file.filename or "upload", file.content_type or "application/octet-stream", data, department, role)
 
 
 @app.get("/api/guardrail/logs")

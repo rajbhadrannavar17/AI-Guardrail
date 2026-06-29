@@ -39,9 +39,11 @@ RULES: list[DetectionRule] = [
     DetectionRule("AWS secret key", "Cloud Credential", re.compile(r"(?i)\baws(.{0,24})?(secret|private).{0,12}[:=]\s*['\"]?[A-Za-z0-9/+=]{32,}"), "Critical", "block", 0.96),
     DetectionRule("GitHub token", "Developer Secret", re.compile(r"\bgh[pousr]_[A-Za-z0-9_]{20,}\b"), "Critical", "block", 0.98),
     DetectionRule("OpenAI API key", "AI Provider Secret", re.compile(r"\bsk-[A-Za-z0-9]{20,}\b"), "Critical", "block", 0.98),
+    DetectionRule("API key disclosure", "AI Provider Secret", re.compile(r"(?i)\b(api[_\s-]?key|access[_\s-]?key|client[_\s-]?secret|secret[_\s-]?key)\s*(is|=|:)\s*['\"]?[A-Za-z0-9_.\-]{3,}"), "Critical", "block", 0.94),
     DetectionRule("Private key", "Private Key", re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----"), "Critical", "block", 0.99),
     DetectionRule("JWT token", "Access Token", re.compile(r"\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b"), "Critical", "block", 0.96),
     DetectionRule("Password assignment", "Credential", re.compile(r"(?i)\b(password|passwd|pwd)\s*[:=]\s*['\"]?[^'\"\s]{8,}"), "High", "redact", 0.9),
+    DetectionRule("Password disclosure", "Credential", re.compile(r"(?i)\b(my\s+)?(password|passwd|pwd)\s+(is|=|:)\s*['\"]?[^'\"\s]{3,}"), "High", "block", 0.92),
     DetectionRule("Connection string", "Database Secret", re.compile(r"(?i)\b(postgres|mysql|mongodb|redis)://[^ \n]+"), "Critical", "block", 0.95),
     DetectionRule("Environment secret", "Environment Variable", re.compile(r"(?im)^\s*[A-Z0-9_]*(SECRET|TOKEN|KEY|PASSWORD)[A-Z0-9_]*\s*=\s*.+$"), "High", "redact", 0.88),
     DetectionRule("Credit card", "PCI", re.compile(r"\b(?:\d[ -]*?){13,19}\b"), "Critical", "block", 0.78),
@@ -99,6 +101,26 @@ POLICIES = [
         "compliance": ["OWASP LLM01", "OWASP LLM06"],
     },
 ]
+
+CATEGORY_POLICY_IDS = {
+    "Access Token": {"POL-001"},
+    "AI Provider Secret": {"POL-001"},
+    "Cloud Credential": {"POL-001"},
+    "Credential": {"POL-001"},
+    "Database Secret": {"POL-001"},
+    "Developer Secret": {"POL-001"},
+    "Environment Variable": {"POL-001"},
+    "Private Key": {"POL-001"},
+    "Possible Secret": {"POL-001"},
+    "PCI": {"POL-002"},
+    "PII": {"POL-002"},
+    "India PII": {"POL-002"},
+    "Regulated Data": {"POL-002"},
+    "Internal System": {"POL-003"},
+    "Intellectual Property": {"POL-003"},
+    "Confidential Document": {"POL-003"},
+    "LLM Threat": {"POL-004"},
+}
 
 
 MODEL_ROUTES = {
@@ -310,13 +332,13 @@ def risk_score(risk: RiskLevel, findings: list[dict]) -> int:
 
 
 def matched_policies(findings: list[dict]) -> list[dict]:
-    categories = {finding["category"] for finding in findings}
+    policy_ids: set[str] = set()
+    for finding in findings:
+        policy_ids.update(CATEGORY_POLICY_IDS.get(finding["category"], set()))
     matches = []
     for policy in POLICIES:
-        condition = policy["condition"].lower()
-        if not findings or any(category.lower().split()[0] in condition for category in categories):
-            if findings or policy["id"] == "POL-003":
-                matches.append(policy)
+        if policy["id"] in policy_ids:
+            matches.append(policy)
     return matches[:4]
 
 

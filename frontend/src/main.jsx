@@ -96,6 +96,9 @@ function App() {
   const [approvals, setApprovals] = useState([]);
   const [docs, setDocs] = useState({ architecture: [], controls: [], compliance: [] });
   const [loading, setLoading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [fileLoading, setFileLoading] = useState(false);
+  const [fileResult, setFileResult] = useState(null);
 
   const latest = logs[0];
   const stats = useMemo(
@@ -161,6 +164,23 @@ function App() {
     setProfile((current) => ({ ...current, [key]: value }));
   }
 
+  async function scanSelectedFile() {
+    if (!selectedFile) return;
+    setFileLoading(true);
+    try {
+      const body = new FormData();
+      body.append("file", selectedFile);
+      const params = new URLSearchParams({ department: profile.department, role: profile.role });
+      const res = await fetch(`${API}/api/guardrail/files/scan?${params.toString()}`, {
+        method: "POST",
+        body,
+      });
+      setFileResult(await res.json());
+    } finally {
+      setFileLoading(false);
+    }
+  }
+
   return (
     <main className={dark ? "appShell dark" : "appShell light"}>
       <aside className="sidebar">
@@ -224,7 +244,7 @@ function App() {
               </div>
               <div className="dropZone">
                 <Upload size={18} />
-                <span>File, PDF, image, and voice inputs are represented in this demo by pasted text inspection.</span>
+                <span>Proxy mode scans AI uploads in transit. Use the PDF scanner panel to test local file inspection.</span>
               </div>
               <textarea value={prompt} onChange={(event) => setPrompt(event.target.value)} />
               <button className="primaryBtn" onClick={sendPrompt} disabled={loading}>
@@ -262,9 +282,30 @@ function App() {
             </div>
           </Panel>
 
+          <Panel title="PDF / File Scanner" icon={Upload}>
+            <div className="fileScan">
+              <input type="file" accept=".pdf,.txt,.md,.csv,.json,.env,.log" onChange={(event) => {
+                setSelectedFile(event.target.files?.[0] || null);
+                setFileResult(null);
+              }} />
+              <button className="secondaryBtn" onClick={scanSelectedFile} disabled={!selectedFile || fileLoading}>
+                {fileLoading ? "Scanning..." : "Scan Upload"}
+              </button>
+              {!fileResult && <p className="empty">PDFs are parsed for text. Uninspectable PDFs are blocked by default.</p>}
+              {fileResult && (
+                <div className="fileResult">
+                  <Badge tone={riskTone[fileResult.risk_level]}>{fileResult.risk_level}</Badge>
+                  <strong>{fileResult.action.replaceAll("_", " ")}</strong>
+                  <span>{fileResult.file_name} | {fileResult.extracted_characters || 0} characters inspected</span>
+                  <p>{fileResult.decision_reason}</p>
+                </div>
+              )}
+            </div>
+          </Panel>
+
           <Panel title="Detection Findings" icon={ShieldAlert} className="span3">
             <div className="findingGrid">
-              {(chatResult?.guardrail?.findings || latest?.findings || []).map((finding, index) => (
+              {(fileResult?.findings || chatResult?.guardrail?.findings || latest?.findings || []).map((finding, index) => (
                 <article key={`${finding.rule}-${index}`} className="findingCard">
                   <div>
                     <Badge tone={riskTone[finding.risk]}>{finding.risk}</Badge>

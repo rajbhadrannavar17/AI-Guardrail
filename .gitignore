@@ -1,10 +1,13 @@
 .venv/
+.DS_Store
 node_modules/
 dist/
 __pycache__/
 .pytest_cache/
 *.pyc
 data/*.sqlite3
+data/*.jsonl
+releases/
 .env
 .env.*
 !.env.example
