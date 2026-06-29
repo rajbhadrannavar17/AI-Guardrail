@@ -17,6 +17,9 @@ assert.equal(scanner.inspectText("admin password as xxx").action, "block");
 assert.equal(scanner.inspectText("admin password 7899").action, "block");
 assert.equal(scanner.inspectText("database token abc").action, "block");
 assert.equal(scanner.inspectText("prod bearer token is abc").action, "block");
+assert.equal(scanner.inspectText("access code 789").action, "block");
+assert.equal(scanner.inspectText("api code 7899").action, "block");
+assert.equal(scanner.inspectText("api 7899").action, "block");
 assert.equal(scanner.inspectText("OPENAI_API_KEY=sk-example-value-for-demo-only").action, "block");
 
 console.log("extension scanner checks passed");

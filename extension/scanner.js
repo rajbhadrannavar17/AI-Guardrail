@@ -98,6 +98,20 @@
       action: ACTION.BLOCK
     },
     {
+      name: "Access code disclosure",
+      category: "Access code",
+      pattern: /\b(?:[a-z0-9_.-]+\s+){0,4}(access[_\s-]?code|pass[_\s-]?code|mfa[_\s-]?code|otp|pin)\s*(is|as|=|:)?\s*['"]?[A-Za-z0-9_.\-]{3,}\b/gi,
+      risk: "High",
+      action: ACTION.BLOCK
+    },
+    {
+      name: "API code disclosure",
+      category: "API key",
+      pattern: /\b(?:[a-z0-9_.-]+\s+){0,4}(api[_\s-]?code|api)\s*(is|as|=|:)?\s*['"]?[A-Za-z0-9_.\-]{3,}\b/gi,
+      risk: "Critical",
+      action: ACTION.BLOCK
+    },
+    {
       name: "Connection string",
       category: "Database secret",
       pattern: /\b(postgres|postgresql|mysql|mongodb|redis):\/\/[^ \n]+/gi,

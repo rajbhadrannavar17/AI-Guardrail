@@ -52,6 +52,18 @@ def test_blocks_dynamic_password_without_connector():
     assert decision["risk_level"] == "High"
 
 
+def test_blocks_access_code_without_connector():
+    decision = classify_prompt("access code 789", "Engineering", "Employee")
+
+    assert decision["action"] == "block"
+    assert decision["risk_level"] == "High"
+
+
+def test_blocks_api_code_and_api_value_without_connector():
+    assert classify_prompt("api code 7899", "Engineering", "Employee")["action"] == "block"
+    assert classify_prompt("api 7899", "Engineering", "Employee")["action"] == "block"
+
+
 def test_blocks_dynamic_token_disclosure():
     decision = classify_prompt("prod bearer token is abc", "Engineering", "Employee")
 

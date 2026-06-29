@@ -47,6 +47,8 @@ RULES: list[DetectionRule] = [
     DetectionRule("Password value after label", "Credential", re.compile(r"(?i)\b(?:[a-z0-9_.-]+\s+){0,4}(password|passwd|pwd)\s+['\"]?[A-Za-z0-9_@#$%^&*+=.!?\-]{3,}\b"), "High", "block", 0.88),
     DetectionRule("Token disclosure", "Access Token", re.compile(r"(?i)\b(?:[a-z0-9_.-]+\s+){0,4}(token|auth[_\s-]?token|bearer[_\s-]?token)\s*(is|as|=|:)\s*['\"]?[A-Za-z0-9_.\-]{3,}"), "Critical", "block", 0.92),
     DetectionRule("Token value after label", "Access Token", re.compile(r"(?i)\b(?:[a-z0-9_.-]+\s+){0,4}(token|auth[_\s-]?token|bearer[_\s-]?token)\s+['\"]?[A-Za-z0-9_.\-]{3,}\b"), "Critical", "block", 0.88),
+    DetectionRule("Access code disclosure", "Access Code", re.compile(r"(?i)\b(?:[a-z0-9_.-]+\s+){0,4}(access[_\s-]?code|pass[_\s-]?code|mfa[_\s-]?code|otp|pin)\s*(is|as|=|:)?\s*['\"]?[A-Za-z0-9_.\-]{3,}\b"), "High", "block", 0.9),
+    DetectionRule("API code disclosure", "AI Provider Secret", re.compile(r"(?i)\b(?:[a-z0-9_.-]+\s+){0,4}(api[_\s-]?code|api)\s*(is|as|=|:)?\s*['\"]?[A-Za-z0-9_.\-]{3,}\b"), "Critical", "block", 0.9),
     DetectionRule("Connection string", "Database Secret", re.compile(r"(?i)\b(postgres|mysql|mongodb|redis)://[^ \n]+"), "Critical", "block", 0.95),
     DetectionRule("Environment secret", "Environment Variable", re.compile(r"(?im)^\s*[A-Z0-9_]*(SECRET|TOKEN|KEY|PASSWORD)[A-Z0-9_]*\s*=\s*.+$"), "High", "redact", 0.88),
     DetectionRule("Credit card", "PCI", re.compile(r"\b(?:\d[ -]*?){13,19}\b"), "Critical", "block", 0.78),
@@ -107,6 +109,7 @@ POLICIES = [
 
 CATEGORY_POLICY_IDS = {
     "Access Token": {"POL-001"},
+    "Access Code": {"POL-001"},
     "AI Provider Secret": {"POL-001"},
     "Cloud Credential": {"POL-001"},
     "Credential": {"POL-001"},
