@@ -1,0 +1,73 @@
+#ai-guardrail-banner {
+  position: fixed;
+  right: 18px;
+  bottom: 92px;
+  z-index: 2147483647;
+  width: min(420px, calc(100vw - 32px));
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #f8fafc;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.34);
+  padding: 14px 44px 14px 14px;
+  font: 14px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  display: none;
+}
+
+#ai-guardrail-banner.visible {
+  display: block;
+}
+
+#ai-guardrail-banner.blocked {
+  border-color: #ef4444;
+}
+
+#ai-guardrail-banner.warned {
+  border-color: #f59e0b;
+}
+
+.ai-guardrail-status {
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+#ai-guardrail-banner.blocked .ai-guardrail-status {
+  color: #fca5a5;
+}
+
+#ai-guardrail-banner.warned .ai-guardrail-status {
+  color: #fcd34d;
+}
+
+.ai-guardrail-body p {
+  margin: 0 0 8px;
+  color: #cbd5e1;
+}
+
+.ai-guardrail-body ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.ai-guardrail-body li {
+  margin-top: 4px;
+}
+
+.ai-guardrail-body span {
+  color: #94a3b8;
+}
+
+.ai-guardrail-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  background: #111827;
+  color: #f8fafc;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}

@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "AI Guardrail for ChatGPT",
+  "description": "Blocks API keys, passwords, tokens, private keys, and high-risk sensitive data before they are submitted to ChatGPT.",
+  "version": "1.0.0",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "AI Guardrail"
+  },
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*"
+      ],
+      "js": ["scanner.js", "content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

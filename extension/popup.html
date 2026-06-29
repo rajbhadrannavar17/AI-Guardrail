@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Guardrail</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="mark">AI</div>
+        <div>
+          <h1>AI Guardrail</h1>
+          <p>Real-time DLP for ChatGPT</p>
+        </div>
+      </header>
+
+      <section class="status">
+        <span></span>
+        Active on ChatGPT
+      </section>
+
+      <section class="stats">
+        <article>
+          <strong id="blocked">0</strong>
+          <span>Blocked</span>
+        </article>
+        <article>
+          <strong id="warnings">0</strong>
+          <span>Warnings</span>
+        </article>
+      </section>
+
+      <section>
+        <h2>Blocks before upload</h2>
+        <ul>
+          <li>API keys and cloud credentials</li>
+          <li>Passwords and database URLs</li>
+          <li>Private keys, JWTs, and tokens</li>
+          <li>High-risk internal data</li>
+        </ul>
+      </section>
+
+      <p class="privacy">Inspection runs locally in the browser. Prompts are not sent to an external server.</p>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

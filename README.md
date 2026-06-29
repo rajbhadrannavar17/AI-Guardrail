@@ -1,11 +1,54 @@
 # AI Guardrail
 
-AI Guardrail is an enterprise AI data-loss-prevention gateway. It inspects employee prompts before they reach AI systems, detects sensitive corporate data, applies policy decisions, redacts risky content, routes approved prompts to safe model tiers, inspects model responses, and records audit evidence.
+AI Guardrail is an enterprise AI data-loss-prevention project for safe AI adoption. It includes a real-time Chrome/Brave extension for ChatGPT plus a FastAPI/React demo dashboard for audit logs, policy decisions, approvals, and analytics.
 
-This implementation is a portfolio-ready local demo. It does not call external LLM providers and does not require API keys. Prompts are inspected locally and stored only in the local SQLite database under `data/`, which is ignored by Git.
+The extension blocks sensitive data before it is submitted to ChatGPT. Normal low-risk prompts work as usual. Detection runs locally in the browser and does not send prompt text to an external server.
+
+The backend/dashboard implementation is a portfolio-ready local demo. It does not call external LLM providers and does not require API keys. Demo prompts are inspected locally and stored only in the local SQLite database under `data/`, which is ignored by Git.
+
+## Chrome Extension Demo
+
+Load the extension in Chrome or Brave:
+
+1. Open `chrome://extensions`.
+2. Enable `Developer mode`.
+3. Click `Load unpacked`.
+4. Select the `extension/` folder from this repository.
+5. Open `https://chatgpt.com`.
+
+Try a normal prompt:
+
+```text
+Explain what phishing is in simple terms.
+```
+
+It should submit normally.
+
+Try a risky prompt:
+
+```text
+My production password is password=SuperSecret123 and my API key is sk-test12345678901234567890
+```
+
+The extension should block the submit action and show a local warning banner.
+
+The extension currently detects:
+
+- API keys and OpenAI-style keys
+- AWS credentials
+- GitHub tokens
+- JWT access tokens
+- private keys
+- passwords and `.env` style secrets
+- database connection strings
+- payment card numbers
+- internal URLs
+- high-entropy possible secrets
+- lower-risk PII warnings such as email addresses and phone numbers
 
 ## Core Capabilities
 
+- Real-time ChatGPT prompt protection with a Chrome/Brave extension
 - Corporate AI gateway with prompt inspection and simulated model routing
 - Sensitive data detection for credentials, tokens, private keys, PII, payment data, internal URLs, source code, contracts, financial reports, medical records, and prompt injection
 - Risk classification: Low, Medium, High, Critical
@@ -20,6 +63,7 @@ This implementation is a portfolio-ready local demo. It does not call external L
 
 ## Stack
 
+- Extension: Chrome Manifest V3, content script, local JavaScript scanner
 - Frontend: React, Vite, Tailwind CSS, lucide-react
 - Backend: FastAPI, Pydantic, SQLite
 - Deployment: Docker Compose
